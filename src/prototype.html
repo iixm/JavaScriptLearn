@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>原型链</h2>
+    <script>
+      //new 一个对象
+      //首先创造空的对象，再让this指向这个对象，通过this.name进行赋值，最终返回this.
+      function Dog(name, age) {
+        this.name = name
+        this.age = age
+      }
+
+      let dog1 = new Dog("哈士奇", 3)
+      let dog2 = new Dog("泰迪", 3)
+
+      //原型的规则
+      //1-所有的引用类型都具有对象特性；可以自由扩展
+      var obj = {}
+      obj.attribute = "testObj"
+      console.log(obj) //{attribute: "testObj"}
+
+      var arr = []
+      arr.attribute = "testArr"
+      console.log(arr) //[attribute: "testArr"]
+
+      function fn1() {}
+      fn1.attribute = "testFun"
+
+      //2-所有的引用类型都有隐形原型属性（proto），值也是一个普通的对象；
+      console.log(obj.__proto__)
+
+      //3-所有的函数，都有一个prototype属性，值也是一个普通的对象；
+      console.log(Object.prototype)
+
+      //4-所有的引用类型的proto属性都指向构造函数的prototype属性值；
+
+      console.log(obj.__proto__ === Object.prototype) //true
+
+      //5-当试图获取对象属性时；如果对象本身没有这个属性；那就会去找他的proto(prototype)中寻找
+
+      function Cat(name) {
+        this.name = name
+      }
+
+      Cat.prototype.callName = function () {
+        console.log(this.name, "miaomiao")
+      }
+
+      let cat1 = new Cat("cat1")
+      cat1.printName = function () {
+        console.log(this.name)
+      }
+
+      cat1.callName() //cat1 miaomiao
+
+      cat1.printName()  //cat1
+
+      //原型链：我找一个属性，首先会在fn.proto中寻找，因为属性值为一个对象就会去fn.proto.proto中去找，同理知道结果为null停止；
+      //这个串起来的链就时原型链
+    </script>
+  </body>
+</html>
