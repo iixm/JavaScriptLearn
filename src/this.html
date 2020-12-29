@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>this</h2>
+    <script>
+      //本质上说，在js中，this是一个指向函数执行环境的指针，this永远指向最后调用他的对象，并且在执行时才能获取值，定义时无法确认他的值
+      this.name = "window"
+      var a = {
+        name: "A",
+        fn: function () {
+          console.log(this.name)
+        },
+      }
+      a.fn() //A
+
+      //使用call();将this的值指定为{name: "B"}
+      a.fn.call({ name: "B" }) //B
+
+      var fn1 = a.fn
+
+      fn1() //window
+      //虽然制定fn1 = a.fn；但是调用是由window调用，所以this为window
+
+      //this 的使用场景
+
+      //1-作为构造函数执行
+
+      function Student(name, age) {
+        this.name = name
+        this.age = age
+      }
+      //首先new字段会创建一个空的对象，然后调用apple（）函数，将this指向这个空对象。
+      //这样的话函数内部的this就会被空对象代替
+      var s = new Student("test", 30)
+
+      //2-作为普通函数执行
+      function fn() {
+        console.log(this)
+      }
+
+      fn() //Window 对象
+
+      //3-作为对象属性执行
+      var obj = {
+        name: "a",
+        printName: function () {
+          console.log(this.name)
+        },
+      }
+
+      obj.printName() //a
+
+      //4-call();apple();bind();
+      //三个函数都是用来重新定义this
+      //首先三个函数的第一个参数都是this指向的对象
+
+      var name = "小明"
+      var age = "17"
+      var obj = {
+        name: "安妮",
+        objAge: this.age,
+        objName: () => {
+          console.log(this)
+          return this
+        },
+        fun: function () {
+          console.log(this)
+          console.log(this.name + "今年" + this.age)
+        },
+        fun1: function (like, dislike) {
+          console.log(
+            this.name + "今年" + this.age,
+            "喜欢吃" + like + "不喜欢吃" + dislike
+          )
+        },
+      }
+
+      console.log(obj.objAge) //17
+      console.log(obj.objName())
+      obj.fun() //安妮今年undefined
+
+      var a = { name: "JAY", age: "23" }
+
+      //call的参数是直接放进去的，第二第三第n个参数全都用逗号隔开
+      obj.fun1.call(a, "苹果", "香蕉") // Jay今年23 喜欢吃苹果不喜欢吃香蕉
+
+      //apply 的所有参数必须放在一个数组里面传进去
+      obj.fun1.apply(a, ["苹果", "香蕉"]) // Jay今年23 喜欢吃苹果不喜欢吃香蕉
+
+      //参数和call一致
+      //bind返回一个新的函数，必须调用才会被执行
+      obj.fun1.bind(a, "苹果", "香蕉")() // Jay今年23 喜欢吃苹果不喜欢吃香蕉
+    </script>
+  </body>
+</html>
